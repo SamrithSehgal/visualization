@@ -1,0 +1,42 @@
+.App {
+  text-align: center;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+#backgroundHolder {
+  width: 100%;
+  height: 100%;
+  background-image: url("../Displays/ext/DBH.jpeg");
+}
+
+#bckgOverlay {
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  opacity: .7;
+}
+
+#buildingSelection {
+  width: 60%;
+  height: 60%;
+  background-color: #FFFF;
+  top: 20%;
+  left: 20%;
+  position: absolute;
+}
+
+#buildingCarousel {
+  position: absolute;
+  width: 60%;
+  height: 80%;
+  margin-top: 8%;
+  margin-left: 19%;
+}
+
+#timeRange{
+  margin-left: 27.5%;
+  margin-bottom: 5%;
+}
+

@@ -1,0 +1,11 @@
+#buildingBtn{
+    width: 10%;
+    height: 5%;
+    position: absolute;
+    margin-left: 26%;
+    margin-top: 30%;
+    background-color:navy;
+    z-index: 1;
+}
+
+
