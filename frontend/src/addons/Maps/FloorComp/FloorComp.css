@@ -15,7 +15,13 @@
 
 #mapBtn{
     position: absolute;
-    margin-top: 4.5%;
+}
+
+#backMapHolder{
+    position: absolute;
+    width: 10%;
+    height: 10%;
+    margin-top: 6.5%;
     margin-left: 22%;
-    z-index: 100;
+    z-index: 100;    
 }

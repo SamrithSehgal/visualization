@@ -228,7 +228,8 @@ module.exports.getRooms = async(req, res) => {
 
 module.exports.getImg = async (req, res) => {
 
-    const floorId = req.body.floorId
+    var floorId = req.body.floorId
+    console.log(floorId)
 
     try{
         const psql = await pool.connect()
@@ -236,6 +237,7 @@ module.exports.getImg = async (req, res) => {
         psql.release()
         const floorDir = "../frontend/public/Floorplans/curFloor"
 
+        
         if(fs.existsSync(floorDir)){ //BADDDDDDDDDDDDDDDDDDDDDD!!!!
             fs.rmSync(floorDir, {recursive: true, force: true})
         }
@@ -246,22 +248,23 @@ module.exports.getImg = async (req, res) => {
             const curTile = row.tilenum
             const curImg = row.imgnum
 
-            if(!fs.existsSync(`${floorDir}`)){ //change
+            if(!fs.existsSync(`${floorDir}`)){
                 fs.mkdirSync(`${floorDir}`)
-                fs.mkdirSync(`${floorDir}/${curZoom}`)
-                fs.mkdirSync(`${floorDir}/${curZoom}/${curTile}`)
             }
-            else if(!fs.existsSync(`${floorDir}/${curZoom}`)){
+            if(!fs.existsSync(`${floorDir}/${curZoom}`)){
                 fs.mkdirSync(`${floorDir}/${curZoom}`)
-                fs.mkdirSync(`${floorDir}/${curZoom}/${curTile}`)
             }
-            else if(!fs.existsSync(`${floorDir}/${curZoom}/${curTile}`)){
+            if(!fs.existsSync(`${floorDir}/${curZoom}/${curTile}`)){
                 fs.mkdirSync(`${floorDir}/${curZoom}/${curTile}`)   
             }
 
-            fs.writeFileSync(`${floorDir}/${curZoom}/${curTile}/${curImg}.png`, imgBuffer)
+            try{
+                fs.writeFileSync(`${floorDir}/${curZoom}/${curTile}/${curImg}.png`, imgBuffer)
+            }catch(error){
+                console.error(error)
+            }
         }
-        res.json({data: ""})
+        res.json({})
     } catch(error){
         console.error(error)
     }

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-leaflet'
-import { FormControl, InputLabel, Select, MenuItem, Button, Stack, Menu } from '@mui/material'
+import { FormControl, Select, MenuItem, Button, Stack } from '@mui/material'
 import { getInit } from '../../../pages/Displays/DbHandler/db';
 import "./MapComp.css"
-import { useLocation, useNavigate } from 'react-router-dom';
-import { getData } from '../../../pages/Displays/DbHandler/db';
 
 const RecenterAutomatically = ({ll}) => {
     const map = useMap();
@@ -29,7 +27,6 @@ function MapComp({mapData, setLvl, setData, curMap, setMap}) {
         {bName: "UK Parliment", bLoc: [51.499546161099154, -0.12466972747308884], bLocation: 8},
         {bName: "White House", bLoc: [38.89791006899353, -77.03644397220845], bLocation: 9},
     ]
-//        {bName: "ICS Lab", bLoc: []},
 
 
     const initData = getInit(mapData, 0)[0]

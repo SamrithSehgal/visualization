@@ -66,7 +66,6 @@ function Building() {
   function updateQuery(newQuery){
     queryRef.current.value = newQuery
     setOpened(true)
-    //S
   }
 
   return (
