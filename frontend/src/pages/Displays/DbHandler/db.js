@@ -17,13 +17,13 @@ export function getData(lvl, data, parentLvl, curLvl, indexes=[], areaName="", c
         case 0:
             for(var building in data.buildingGroup){
                 var floors = []
-                var prevFloor = data.buildingGroup[building].location
+                var prevFloor = [data.buildingGroup[building].location]
                 for(var bRoom of data.buildingGroup[building]){
                     lvlOccs.push(bRoom[occName])
                     lvlName = bRoom.buildingname
-                    if(bRoom.location != prevFloor || bRoom == data.buildingGroup[building][data.buildingGroup[building].length-1]){
+                    if(!prevFloor.includes(bRoom.location) || bRoom == data.buildingGroup[building][data.buildingGroup[building].length-1]){
                         floors.push(bRoom.location)
-                        prevFloor = bRoom.location
+                        prevFloor.push(bRoom.location)
                     }
                 }
                 var buildingAvg = Math.round((lvlOccs.reduce((a, b) => parseFloat(a)+parseFloat(b))/lvlOccs.length) * 100)/100
@@ -43,19 +43,21 @@ export function getData(lvl, data, parentLvl, curLvl, indexes=[], areaName="", c
                 }
             }
 
-            var prevRoom = data.floorGroup[floorIndexes[0]].location
+            var prevRoom = [data.floorGroup[floorIndexes[0]].location]
             for(var index of floorIndexes){
                 var floorRooms = []
+                var floorId = -1
                 for(var fRoom of data.floorGroup[index]){
                     lvlOccs.push(fRoom[occName])
                     lvlName = fRoom.floorname
-                    if(fRoom.location != prevRoom){
+                    if(!prevRoom.includes(fRoom.location)){
                         floorRooms.push(fRoom.location)
-                        prevRoom = fRoom.location
+                        prevRoom.push(fRoom.location)
                     }
+                    floorId = fRoom.floor
                 }
                 var floorAvg = Math.round((lvlOccs.reduce((a, b) => parseFloat(a)+parseFloat(b))/lvlOccs.length) * 100)/100
-                lvlData.push({name: lvlName, occupancy: floorAvg, id: lvlId, nextLvl: floorRooms})
+                lvlData.push({name: lvlName, occupancy: floorAvg, id: lvlId, nextLvl: floorRooms, floorId: floorId})
                 lvlId += 1
                 lvlOccs = []
                 lvlName = ""

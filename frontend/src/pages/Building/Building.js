@@ -22,7 +22,8 @@ function Building() {
     setPrevs(true, query)
 
     axios.post("http://localhost:8888/sendQuery", {query}).then((res) => {
-      navigator(`${res.data.visualization[0]}`, {state:{data: res.data.shapedData, chart: parseInt(res.data.visualization[1])}})
+      console.log(res.data.visualization)
+      navigator(`${res.data.visualization[0]}`, {state:{data: res.data.shapedData, chart: parseInt(res.data.visualization[1]), curMap: 0}})
     })
   }
 

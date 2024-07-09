@@ -1,4 +1,5 @@
 const { Pool } = require('pg')
+const fs = require('node:fs')
 
 const pool = new Pool({
     user: "postgres",
@@ -205,39 +206,62 @@ module.exports.sendQuery = async (req, res) => {
     }
 }
 
-module.exports.getInfo = async (req, res) => {
-    const tableData = req.body.data
-    var locations = []
-    for(var row of tableData){
-        if(row.location != undefined){
-            locations.push(row.location)
-        }
+
+
+
+module.exports.getRooms = async(req, res) => {
+    const roomIds = req.body.nextLvl
+
+    try{
+        const psql = await pool.connect()
+        const roomRes = await psql.query(`SELECT * FROM roomlocs r WHERE r.location in (${roomIds})`)
+        psql.release()
+        res.json({data: roomRes.rows})
+    }catch(error){
+        console.error(error)
     }
-    try {
-        var sqlQuery = "SELECT * FROM occupancy_table o WHERE location IN ( "
+}
 
-        for(var location of locations){
-            sqlQuery += location
-            sqlQuery += ", "
-        }
-        sqlQuery = sqlQuery.substring(0, sqlQuery.length-2)
-        sqlQuery += " ) ORDER BY o.floor"
 
-        const floorRes = await pool.query(sqlQuery);
-        
-        var prevFloor = 0
-        var curData = []
 
-        for(var row in floorRes.rows){
-            if(row.floor != prevFloor){
 
-            }
-            else{
-                curData.push({})
-            }
+
+module.exports.getImg = async (req, res) => {
+
+    const floorId = req.body.floorId
+
+    try{
+        const psql = await pool.connect()
+        const imgRes = await psql.query(`SELECT * FROM floorplans f WHERE f.floorId = ${floorId};`)
+        psql.release()
+        const floorDir = "../frontend/public/Floorplans/curFloor"
+
+        if(fs.existsSync(floorDir)){ //BADDDDDDDDDDDDDDDDDDDDDD!!!!
+            fs.rmSync(floorDir, {recursive: true, force: true})
         }
 
+        for(var row of imgRes.rows){
+            const imgBuffer = row.floorimg
+            const curZoom = row.zoomnum
+            const curTile = row.tilenum
+            const curImg = row.imgnum
 
+            if(!fs.existsSync(`${floorDir}`)){ //change
+                fs.mkdirSync(`${floorDir}`)
+                fs.mkdirSync(`${floorDir}/${curZoom}`)
+                fs.mkdirSync(`${floorDir}/${curZoom}/${curTile}`)
+            }
+            else if(!fs.existsSync(`${floorDir}/${curZoom}`)){
+                fs.mkdirSync(`${floorDir}/${curZoom}`)
+                fs.mkdirSync(`${floorDir}/${curZoom}/${curTile}`)
+            }
+            else if(!fs.existsSync(`${floorDir}/${curZoom}/${curTile}`)){
+                fs.mkdirSync(`${floorDir}/${curZoom}/${curTile}`)   
+            }
+
+            fs.writeFileSync(`${floorDir}/${curZoom}/${curTile}/${curImg}.png`, imgBuffer)
+        }
+        res.json({data: ""})
     } catch(error){
         console.error(error)
     }

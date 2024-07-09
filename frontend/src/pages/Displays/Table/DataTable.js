@@ -10,7 +10,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
-import SideBar from '../../../addons/SideBar/SideBar';
 import {getInit, moveDownLvl, moveUpLvl} from "../DbHandler/db.js"
 
 import p1 from "./Floorplans/p1.png"

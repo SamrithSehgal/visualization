@@ -1,0 +1,35 @@
+
+#barHolder{
+    margin-top: 8%;
+    margin-left: 23%;
+}
+
+#pieHolder{
+    margin-top: -3%;
+    margin-left: 18%;
+}
+
+#lineHolder{
+    margin-top: 5%;
+    margin-left: 21%;
+}
+
+#funnelHolder{
+    margin-top: 8%;
+    margin-left: 21%;
+}
+
+#scatterHolder{
+    margin-top: 8%;
+    margin-left: 20%;
+}
+
+#sideBarWrapper{
+    position: absolute;
+}
+
+#titleHolder{
+    position: absolute;
+    margin-left: 37%;
+    margin-top: -2%;
+}

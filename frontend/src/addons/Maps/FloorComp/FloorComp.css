@@ -1,0 +1,21 @@
+#mapHolder{
+    width: 100vw;
+    height: 100vh;
+}
+
+
+#Floors{
+    width: 100%;
+    height: 100%;
+}
+
+.floorData{
+    color: "white";
+}
+
+#mapBtn{
+    position: absolute;
+    margin-top: 4.5%;
+    margin-left: 22%;
+    z-index: 100;
+}
