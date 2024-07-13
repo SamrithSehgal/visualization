@@ -174,6 +174,7 @@ function QueryBuilder({setOpen, query, saveQuery}) {
         newSelects[0] = "SELECT " + newVars.join(", ")
         newSelects[0] = newSelects[0].substring(0, newSelects[0].length)
         newStatements[0] = newSelects.join(" ")
+        newSelects[2] = newSelects[2].replaceAll("undefined", "")
         setSelect(newSelects)
         setStatements(newStatements)
     }
@@ -210,7 +211,12 @@ function QueryBuilder({setOpen, query, saveQuery}) {
                 curWheres[where] = curWhereVars.join(".")
             }
         }
-        newSelects[2] = curWheres.join(" ")
+        if(newSelects[2].includes(".")){
+            newSelects[2] = curWheres.join(" ")
+        }
+        else{
+            newSelects[2] = ";"
+        }
         newStatements[0] = newSelects.join(" ")
 
         setSelect(newSelects)

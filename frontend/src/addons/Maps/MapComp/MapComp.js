@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap, GeoJSON } from 'react-leaflet'
 import { FormControl, Select, MenuItem, Button, Stack } from '@mui/material'
 import { getInit } from '../../../pages/Displays/DbHandler/db';
+import {getGeo} from './DataHolder'
 import "./MapComp.css"
 
 const RecenterAutomatically = ({ll}) => {
@@ -14,6 +15,7 @@ const RecenterAutomatically = ({ll}) => {
 
 function MapComp({mapData, setLvl, setData, curMap, setMap}) {
 
+    
 
     var buildingLocs = [
         {bName: "Donald Bren Hall", bLoc: [33.64380884254004, -117.84222307979927], bLocation: 0},
@@ -36,18 +38,18 @@ function MapComp({mapData, setLvl, setData, curMap, setMap}) {
 
     const [curIndex, setIndex] = useState(curMap)
 
+
     function changeBuilding(loc){
         setMap(loc)
         setIndex(loc)
     }
 
-    function seeFloors(){
+    function seeFloors(floorIndex){
         //var resData = getData(1, mapData, 0, 0, initData[curIndex].nextLvl)
         //navigate('/floors', {state: {data: allData,floorData: resData[0], title: resData[1].replaceAll("_", " "), curMap: curIndex}})
-        setData(initData[curIndex].nextLvl)
+        setData(initData[floorIndex].nextLvl)
         setLvl(1)
     }
-
 
     return ( 
         <div id='allMap'>
@@ -70,15 +72,16 @@ function MapComp({mapData, setLvl, setData, curMap, setMap}) {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker position={buildingLocs[curIndex].bLoc}>
-                        <Popup>
-                            <Stack direction={"column"} spacing={2}>
-                                <MenuItem value={buildingLocs[curIndex].bName}>{buildingLocs[curIndex].bName}, Occupancy: {buildingLocs[curIndex].occupancy}</MenuItem>
-                                <Button variant='contained' onClick={seeFloors}>See Floors</Button>
-                            </Stack>
-                        </Popup>
-                    </Marker>
-                    <Circle center={buildingLocs[curIndex].bLoc} radius={100} />
+                    {buildingLocs.map((building) => (
+                        <GeoJSON data={getGeo(building.bLocation)}>
+                            <Popup>
+                                <Stack direction={"column"} spacing={2}>
+                                    <MenuItem value={building.bName}>{building.bName}, Occupancy: {building.occupancy}</MenuItem>
+                                    <Button variant='contained' onClick={() => {seeFloors(building.bLocation)}}>See Floors</Button>
+                                </Stack>
+                            </Popup>                        
+                        </GeoJSON>
+                    ))}
                     <RecenterAutomatically ll={buildingLocs[curIndex].bLoc}/>
                 </MapContainer>       
             </div>
