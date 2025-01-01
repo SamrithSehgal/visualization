@@ -25,10 +25,7 @@ function OccMap() {
                 setElement(<MapComp mapData={location.state.data} setLvl={setLvl} setData={setData} curMap={curMap} setMap={setMap}/>)
                 break
             case 1:
-                console.log(location.state.data)
-                var floorData = getData(1, location.state.data, 0, 0, curData)
-                setIndexes(curData)
-                setElement(<FloorComp data={floorData[0]} title={floorData[1].replaceAll("_", " ")} setLvl={setLvl} setRoomData={setData} setLocs={setLocs}/>)
+                setElement(<FloorComp data={curData[0]} title={curData[1]} setLvl={setLvl} setRoomData={setData} setLocs={setLocs}/>)
                 break
             case 2:
                 var roomData = getData(2, location.state.data, 0, 1, curData)

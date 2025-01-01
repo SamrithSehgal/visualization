@@ -51,3 +51,15 @@
   margin-right: 5%;
   margin-top: 2%;
 }
+
+#sketchModal{
+  max-width: 20%;
+}
+
+#buildingSelect{
+  position: relative;
+  max-width: 20%;
+  left: 38%;
+  top: 10%;
+  margin-top: 9%;
+}

@@ -3,6 +3,8 @@ import Building from "./pages/Building/Building"
 import DataTable from './pages/Displays/Table/DataTable';
 import Graph from './pages/Displays/Plot/Graph'
 import OccMap from './pages/Displays/Map/OccMap';
+import Sketcher from './addons/Maps/LayoutComp/Sketcher/Sketcher';
+import Sketch from './addons/Maps/LayoutComp/Loader/Sketch';
 
 
 function App() {
@@ -13,6 +15,8 @@ function App() {
             <Route path='/table' element={<DataTable />} />
             <Route path='/graph' element={<Graph />} />
             <Route path='/map' element={<OccMap />} />
+            <Route path='/layout' element={<Sketcher />} />
+            <Route path='/sketch' element={<Sketch />} />
         </Routes>
     </BrowserRouter>
   );

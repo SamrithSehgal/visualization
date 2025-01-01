@@ -2,16 +2,30 @@ import React, {useEffect, useRef, useState} from 'react';
 import './Building.css';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { Button, Card, Divider, List, ListItem, ListItemButton, ListItemText, Paper, Typography} from '@mui/material';
+import { Button, Card, Divider, FormControl, List, ListItem, ListItemButton, ListItemText, MenuItem, Paper, Select, Stack, Typography} from '@mui/material';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import QueryBuilder from '../../addons/QueryBuilder/QueryBuilder';
+import Modal from '@mui/material/Modal';
 
 function Building() {
   const queryRef = useRef({value: ""}) 
   const [openedQuery, setOpened] = useState(false)
   const [modalOpen, setModal] = useState(false)
+
+  const [sketchOpen, setSketch] = useState(false)
+  const [selectData, setSelect] = useState([])
+  const [curIndex, setIndex] = useState(0)
+  const handleOpen = () => setSketch(true);
+  const handleClose = () => setSketch(false);
+  const style = {
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
   var navigator = useNavigate()
   var [queryList, setList] = useState([])
 
@@ -20,10 +34,10 @@ function Building() {
     var tempChoice = 0
 
     setPrevs(true, query)
-
+    //`${res.data.visualization[0]}`
     axios.post("http://localhost:8888/sendQuery", {query}).then((res) => {
-      console.log(res.data.visualization)
-      navigator(`${res.data.visualization[0]}`, {state:{data: res.data.shapedData, chart: parseInt(res.data.visualization[1]), curMap: 0}})
+      //console.log("hello")
+      navigator("/map", {state:{data: res.data.lvlData, chart: parseInt(0), curMap: 0}})
     })
   }
 
@@ -56,6 +70,12 @@ function Building() {
     }
   }
 
+  axios.post("http://localhost:8888/getBuildings", {}).then((res) => {
+    setSelect(res.data.resArray)
+    //console.log("hello")
+    //navigator("/map", {state:{data: res.data.lvlData, chart: parseInt(0), curMap: 0}})
+  })
+
   useEffect(() =>{
     var res = setPrevs(false)
     if(res != -1){
@@ -68,6 +88,10 @@ function Building() {
     setOpened(true)
   }
 
+  function changeBuilding(info){
+    setIndex(info)
+  }
+
   return (
     <div className="App">
       <div id='backgroundHolder'>
@@ -77,6 +101,23 @@ function Building() {
       {modalOpen &&
         <QueryBuilder setOpen={setModal} query={queryRef.current.value} saveQuery={updateQuery}/>
       }
+
+      <div id='sketchModal'>
+        <Modal open={sketchOpen} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+          <div id='buildingSelect'>
+            <Box sx={style}>
+              <FormControl fullWidth sx={{backgroundColor: "white"}}>
+                <Select value={selectData.length == 0 ? "" : selectData[curIndex].name} onChange={(info) => {changeBuilding(info.target.value)}} renderValue={(value) => (<MenuItem value={value}>{value}</MenuItem>)}>
+                  {selectData.map((building, index) => 
+                    <MenuItem value={index}>{building.name}</MenuItem>
+                  )}                  
+                </Select>
+              </FormControl>
+            </Box>
+          </div>
+        </Modal>
+      </div>
+
       <div id='buildingSelection'>
         <div id='prevQueries'>
           <Box sx={{ width: '100%', height: '100%',maxWidth: 460, bgcolor: '#48494B', borderRadius: 4, paddingBottom: '5%', paddingTop: '1%'}}>
@@ -119,6 +160,9 @@ function Building() {
             <Button variant='contained' size='small' onClick={() => {setModal(true)}} sx={{bgcolor: '#48494B'}}>
             Query Builder
             </Button>
+            <Button variant='contained' size='small' onClick={handleOpen} sx={{bgcolor: '#48494B'}}>
+            Sketch Builder
+            </Button>            
           </Box>
         </div>    
       </div>

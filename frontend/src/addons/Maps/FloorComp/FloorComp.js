@@ -5,6 +5,7 @@ import { Edges, Html } from "@react-three/drei"
 import "./FloorComp.css"
 import { Button } from '@mui/material';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function FloorComp({data, title, setLvl, setRoomData, setLocs}) {
 
@@ -13,11 +14,13 @@ function FloorComp({data, title, setLvl, setRoomData, setLocs}) {
     const colors = ["#F179AD", "#EF4E9B","#E43983","#ED4968","#F04543","#A64D9D","#7A5CA4","#2263AF"]
 
     const [floorsData, setData] = useState([])
+    var navigator = useNavigate()
 
     useEffect(() => {
         var newData = []
+        console.log(data)
         for(var floor of data){
-            newData.push({name: floor.name, occupancy: floor.occupancy, index: (floor.id+1), location: floor.floorId, nextLvl: floor.nextLvl})
+            newData.push({name: floor.name, occupancy: floor.total, index: floor.index, location: floor.spaceId, nextLvl: floor.nextLvl, polygon: floor.verticies})
         }
         setData(newData)
         roomAble.current = true
@@ -48,6 +51,7 @@ function FloorComp({data, title, setLvl, setRoomData, setLocs}) {
     }
 
     function seeRooms(floor){
+        /*
         if(roomAble.current == true){
             try{
                 axios.post("http://localhost:8888/getImg", {floorId: floor.location}).then((imgRes) =>{
@@ -65,7 +69,18 @@ function FloorComp({data, title, setLvl, setRoomData, setLocs}) {
         else{
             roomAble.current = true
         }
-    }
+            axios.post("http://localhost:8888/getRoomImg", {}).then((res) => {
+
+            })*/
+            //navigator("/layout", {state: {data: [floor.polygon, floor.location]}})
+            axios.post("http://localhost:8888/getRooms", {"parent_id": floor.location}).then((res) => {
+                var data = res.data
+
+                if(data.isSketch = true){
+                    navigator("/sketch", {state: {"data": data.sketch, "polygon": floor.polygon}})
+                }
+            })   
+        }
 
     return (
         <div id='mapHolder'>
